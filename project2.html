@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Application</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+        }
+        .quiz-container {
+            width: 50%;
+            margin: 50px auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+        }
+        h1 {
+            color: #333;
+        }
+        #options button {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0;
+            border: none;
+            background: #007bff;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        #options button:hover {
+            background: #0056b3;
+        }
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="quiz-container">
+        <h1>Quiz Application</h1>
+        <div id="quiz-box">
+            <p id="question">Loading...</p>
+            <div id="options"></div>
+            <button id="next-btn">Next</button>
+        </div>
+        <div id="result-box" class="hidden">
+            <h2>Your Score: <span id="score"></span></h2>
+            <button id="restart-btn">Restart Quiz</button>
+        </div>
+    </div>
+
+    <script>
+        const questions = [
+            { question: "What is the capital of France?", options: ["London", "Berlin", "Paris", "Rome"], answer: "Paris" },
+            { question: "Which data type is used to store decimal numbers in Java?", options: ["int", "double", "char", "boolean"], answer: "double" },
+            { question: "What keyword is used to define a class in Java?", options: ["class", "struct", "function", "object"], answer: "class" }
+        ];
+
+        let currentQuestionIndex = 0;
+        let score = 0;
+
+        const questionEl = document.getElementById("question");
+        const optionsEl = document.getElementById("options");
+        const nextBtn = document.getElementById("next-btn");
+        const resultBox = document.getElementById("result-box");
+        const scoreEl = document.getElementById("score");
+        const restartBtn = document.getElementById("restart-btn");
+
+        function loadQuestion() {
+            const currentQuestion = questions[currentQuestionIndex];
+            questionEl.textContent = currentQuestion.question;
+            optionsEl.innerHTML = "";
+
+            currentQuestion.options.forEach(option => {
+                const button = document.createElement("button");
+                button.textContent = option;
+                button.addEventListener("click", () => checkAnswer(option));
+                optionsEl.appendChild(button);
+            });
+        }
+
+        function checkAnswer(selectedOption) {
+            const currentQuestion = questions[currentQuestionIndex];
+            if (selectedOption === currentQuestion.answer) {
+                score++;
+            }
+            currentQuestionIndex++;
+
+            if (currentQuestionIndex < questions.length) {
+                loadQuestion();
+            } else {
+                showResult();
+            }
+        }
+
+        function showResult() {
+            document.getElementById("quiz-box").classList.add("hidden");
+            resultBox.classList.remove("hidden");
+            scoreEl.textContent = `${score} / ${questions.length}`;
+        }
+
+        restartBtn.addEventListener("click", () => {
+            currentQuestionIndex = 0;
+            score = 0;
+            document.getElementById("quiz-box").classList.remove("hidden");
+            resultBox.classList.add("hidden");
+            loadQuestion();
+        });
+
+        // Start the quiz
+        loadQuestion();
+    </script>
+
+</body>
+</html>
